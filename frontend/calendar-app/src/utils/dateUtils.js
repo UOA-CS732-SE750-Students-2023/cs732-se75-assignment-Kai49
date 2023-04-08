@@ -1,6 +1,13 @@
 export function getMonthDates(date) {
+
+
   const year = date.getUTCFullYear();
-  const month = date.getUTCMonth();
+
+
+  const month = date.getMonth() ;
+  
+
+  
   const firstDay = new Date(Date.UTC(year, month, 1));
   const lastDay = new Date(Date.UTC(year, month + 1, 0));
   const daysInMonth = lastDay.getUTCDate();
@@ -25,6 +32,7 @@ export function getMonthDates(date) {
       date: dayDate.toISOString().split('T')[0],
     });
   }
+   
 
   return dates;
   }

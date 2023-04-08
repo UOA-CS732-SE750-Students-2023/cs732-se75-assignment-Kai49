@@ -23,14 +23,15 @@ export default {
       type: String,
       default: '',
     },
+ 
   },
   setup(props, { emit }) {
     const store = useStore();
     const eventsCount = computed(() => store.getters.getEventsForDate(props.date).length);
     
     onMounted(() => {
-        store.dispatch('fetchEvents');
-        console.log(eventsCount.length)
+        store.dispatch('fetchEvents')
+        
         });
 
     const showEvents = () => {

@@ -13,11 +13,13 @@
         :key="dateObj.date"
         :day="dateObj.day"
         :date="dateObj.date"
+        :currentDate="currentDate.value"
         @show-events="showEvents"
+        @update-selected-date="updateSelectedDate"
         @open-event-dialog="() => {
         eventDialogVisible = true;
         selectedDate = dateObj.date;
-  }"
+        }"    
 
       ></Day>
     </div>
@@ -26,7 +28,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Day from './Day.vue';
 import EventDialog from './EventDialog.vue';
 import { getMonthDates } from '../utils/dateUtils';
@@ -46,24 +48,41 @@ export default {
     };
   },
   setup() {
+
     const currentDate = ref(new Date());
+    
     const selectedDate = ref(null);
+    const dates = ref(getMonthDates(currentDate.value));
+    
+   
+    
+    const updateSelectedDate = (newDate) => {
+      selectedDate.value = newDate;
+    };
+
+
 
     const formattedCurrentDate = computed(() => {
-      return currentDate.value.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      return currentDate.value.toLocaleString('en-NZ', { month: 'long', year: 'numeric' });
     });
 
-    const dates = computed(() => {
-      return getMonthDates(currentDate.value);
-    });
+
+    watch(currentDate, () => {
+    dates.value = getMonthDates(currentDate.value);
+  });
+    
+ 
 
     const showEvents = (date) => {
       selectedDate.value = new Date(date).toISOString().split('T')[0];
     };
 
      const goToPrevMonth = () => {
+          
+
       const newDate = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1);
       currentDate.value = newDate;
+
     };
 
     const goToNextMonth = () => {
@@ -71,7 +90,7 @@ export default {
       currentDate.value = newDate;
     };
 
-    return { formattedCurrentDate, dates, showEvents, selectedDate,currentDate, goToPrevMonth, goToNextMonth };
+    return { formattedCurrentDate, dates, showEvents, selectedDate,currentDate, goToPrevMonth, goToNextMonth, updateSelectedDate };
   },
 
 };
